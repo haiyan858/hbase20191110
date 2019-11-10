@@ -1,6 +1,6 @@
 package com.book.CRUD;
 
-import com.book.util.HBaseHelper.HBaseHelper;
+import com.book.util.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.TableName;

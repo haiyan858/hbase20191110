@@ -1,4 +1,4 @@
-package com.book.util.HBaseHelper;
+package com.book.util;
 
 import org.apache.hadoop.conf.Configuration;
 
@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.HColumnDescriptor;
 import org.apache.hadoop.hbase.HTableDescriptor;
