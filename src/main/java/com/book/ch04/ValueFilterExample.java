@@ -2,6 +2,7 @@ package com.book.ch04;
 
 import com.book.util.HBaseHelper;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.TableName;
@@ -31,15 +32,20 @@ public class ValueFilterExample {
         Table table = connection.getTable(TableName.valueOf("testtable"));
 
 
-        Filter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL,
-                new SubstringComparator(".4"));
+        Filter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(".4"));
 
         Scan scan = new Scan();
         scan.setFilter(filter);
         ResultScanner scanner = table.getScanner(scan);
+
+        System.out.println("Results of scan:");
         for (Result result : scanner) {
-            for (KeyValue kv : result.raw()) {
-                System.out.println("KV: " + kv + ",Value: " + Bytes.toString(kv.getValue()));
+//            for (KeyValue kv : result.raw()) {
+//                System.out.println("KV: " + kv + ",Value: " + Bytes.toString(kv.getValue()));
+//            }
+            for (Cell cell : result.rawCells()) {
+                System.out.println("Cell: " + cell + ", Value: " + Bytes.toString(cell.getValueArray(),
+                        cell.getValueOffset(), cell.getValueLength()));
             }
         }
         scanner.close();
@@ -48,8 +54,12 @@ public class ValueFilterExample {
         Get get = new Get(Bytes.toBytes("row-5"));
         get.setFilter(filter); //将同样的过滤器应用于Get实例
         Result result = table.get(get);
-        for (KeyValue kv : result.raw()) {
-            System.out.println("KV: " + kv + ",Value: " + Bytes.toString(kv.getValue()));
+//        for (KeyValue kv : result.raw()) {
+//            System.out.println("KV: " + kv + ",Value: " + Bytes.toString(kv.getValue()));
+//        }
+        for (Cell cell: result.rawCells()){
+            System.out.println("Cell: " + cell + ", Value: " + Bytes.toString(cell.getValueArray(),
+                    cell.getValueOffset(), cell.getValueLength()));
         }
 
     }
