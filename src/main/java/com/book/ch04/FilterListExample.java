@@ -52,26 +52,56 @@ public class FilterListExample {
         filters.add(filter3);
 
         FilterList filterList1 = new FilterList(filters);
+
         Scan scan = new Scan();
         scan.setFilter(filterList1);
         ResultScanner scanner1 = table.getScanner(scan);
-        for(Result result:scanner1){
-            for(KeyValue kv: result.raw()){
-                System.out.println("KV: "+kv+ ",Value: "+ Bytes.toString(kv.getValue()));
+        System.out.println("Results of scan #1 - MUST_PASS_ALL:");
+
+        int n = 0;
+        for (Result result : scanner1) {
+            for (Cell cell : result.rawCells()) {
+                System.out.println("Cell: " + cell + ", Value: " +
+                        Bytes.toString(cell.getValueArray(), cell.getValueOffset(),
+                                cell.getValueLength()));
+                n++;
             }
         }
         scanner1.close();
 
+//        for(Result result:scanner1){
+//            for(KeyValue kv: result.raw()){
+//                System.out.println("KV: "+kv+ ",Value: "+ Bytes.toString(kv.getValue()));
+//            }
+//        }
+//        scanner1.close();
+
 
         FilterList filterList2 = new FilterList(FilterList.Operator.MUST_PASS_ONE, filters);
+
         scan.setFilter(filterList2);
         ResultScanner scanner2 = table.getScanner(scan);
-        for(Result result:scanner2){
-            for(KeyValue kv: result.raw()){
-                System.out.println("KV: "+kv+ ",Value: "+ Bytes.toString(kv.getValue()));
+
+        System.out.println("Total cell count for scan #1: " + n);
+        n = 0;
+        System.out.println("Results of scan #2 - MUST_PASS_ONE:");
+        for (Result result : scanner2) {
+            for (Cell cell : result.rawCells()) {
+                System.out.println("Cell: " + cell + ", Value: " +
+                        Bytes.toString(cell.getValueArray(), cell.getValueOffset(),
+                                cell.getValueLength()));
+                n++;
             }
         }
         scanner2.close();
+//
+//        for(Result result:scanner2){
+//            for(KeyValue kv: result.raw()){
+//                System.out.println("KV: "+kv+ ",Value: "+ Bytes.toString(kv.getValue()));
+//            }
+//        }
+//        scanner2.close();
+
         System.out.println("Total cell count for scan #2: " + n);
 
     }
